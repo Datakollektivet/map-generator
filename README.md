@@ -20,7 +20,7 @@ see `node map-generator.js help`
 
 ### Embedding maps (example)
 
-1. Generate map `node map-generator layers=regions output=container``
+1. Generate map `node map-generator layers=regions output=container`
 2. Embed in a html page
 3. Style with css styling
 ```
@@ -54,8 +54,7 @@ see `node map-generator.js help`
 
 ```
 
-See [client-example.html]()
-
+See [client-example.html](map-generator/client-example.html) for complete code.
 
 ### Features (will soon include)
 
