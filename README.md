@@ -2,6 +2,8 @@
 
 Tool for generating base SVG maps of Denmark. It will generate a "raw" SVG with all the dom elements. It is neccesary to add styling and interactivity when embedding the map using D3.js.
 
+The generated SVG is *responsive* O.o
+
 ### Installation
 
 ```
@@ -15,6 +17,45 @@ Tool for generating base SVG maps of Denmark. It will generate a "raw" SVG with 
 `node map-generator <options>`
 
 see `node map-generator.js help`
+
+### Embedding maps (example)
+
+1. Generate map `node map-generator layers=regions output=container``
+2. Embed in a html page
+3. Style with css styling
+```
+        /* Set width of parent container for responsive SVG */
+        #datakollektivet-i0001 {
+            width: 800px;
+        }
+
+
+        /* Style elements */
+        #datakollektivet-i0001 svg .region {
+            fill: transparent;
+            stroke: darkslategray;
+            stroke-width: 1px;
+        }
+
+        #datakollektivet-i0001 svg .region.over {
+            fill: darkslategray;
+            
+        }
+```
+4. Add interactivity with D3 
+```
+    d3.select("svg").selectAll("g")
+        .on('mouseover', function () {
+            d3.select(this).attr("class", "region over")
+        })
+        .on('mouseout', function () {
+            d3.select(this).attr("class", "region")
+        });
+
+```
+
+See [client-example.html]()
+
 
 ### Features (will soon include)
 
@@ -51,11 +92,21 @@ It is possible to either have the individual map layers as isolated SVG groups o
 
 You add nested geometries by adding the cli argument  `node map-generator.js nested=true`.
 
+#### Configure style (or complexity)
+It is possible to generate maps that directly reflect the underlyig geojson, but also generate maps that have simpler geometries to make more stylistic and visually simpler maps. Options include:
+
++ plain [default]
++ simplified
++ ?
+
+
+
+
 ### TODO
 
+0. Convert to topojson with properties for better simplification library
 1. Add all the map layers
 2. Add full cli configuration
-3. Add working example with D3
 4. Add stylistic simplification
 5. Add custom container ID (e.g. to fit Datakollektivet production serial)
 

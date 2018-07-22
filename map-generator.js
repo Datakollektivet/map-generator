@@ -18,8 +18,6 @@ if(process.argv.indexOf("help") > 0){
     process.exit(1)
 }
 
-
-
 //Different GeoJSON maps
 //Note, we use geojson (over topojson) for the additional information (e.g. name, ids, etc.)
 const denmark = JSON.parse(fs.readFileSync("./geojson/danmark.geojson"));
@@ -48,15 +46,15 @@ projection
 let svg = d3n.createSVG(0, 0);
 //Adding the viewbox attribute to make the svg responsive to the parent size 
 svg.attr("viewBox", "0 0 " + 800 + " " + 600);
-
+/*
 svg.append("g")
     .attr("class", "datakollektivet-dkmap-danmark") //Class allow styling later
     .append("path")
-    .datum(denmark)
+    .datum(denmarkSimplified)
     .attr("d", path)
     .attr("data-dstid", "000") //The id used in the Danish statistical data
     .attr("data-name", "Danmark");//Name of the path.
-
+*/
 
 let regionGrp = svg.append("g").attr("class", "datakollektivet-dkmap-regioner");
 regionGrp.selectAll("g")
@@ -77,7 +75,7 @@ regionGrp.selectAll("g")
 regionGrp.selectAll("g").each(function(){
     d3.select(this).attr("class", "region");
 });
-
+/*
 let municipalityGrp = svg.append("g").attr("class", "datakollektivet-dkmap-kommuner");
 municipalityGrp.selectAll("g")
     .data(municipalities.features)
@@ -96,7 +94,7 @@ municipalityGrp.selectAll("g")
 
 municipalityGrp.selectAll("g").each(function(){
     d3.select(this).attr("class", "kommune");
-});
+});*/
 
 fs.writeFileSync('map.html', d3n.html());
 fs.writeFileSync('map_container.html', d3n.chartHTML());
