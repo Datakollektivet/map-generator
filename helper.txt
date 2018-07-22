@@ -1,0 +1,23 @@
+Map Generator Options:
+
+help:       Show tool tip
+    
+layer:      Configure the layers included in the output file.
+            Options:
+            layer=all               [default] Generates an output with all the map layers (WARNING: large file)
+            layer=denmark           Generates a map of Denmark
+            layer=regions           Generates a regional map of Denmark
+            layer=municipalities    Generates a municipal map of Denmark
+                    
+            Add layers with comma seperation, e.g. layer=denmark, regions
+    
+output:     Configure the format of the output file.
+            Options:
+            output=container        [default] Generates a HTML file with a container with a SVG inside.
+            output=svg              Generates a SVG file.
+            output=html             Generates a full HTML file.
+
+nested:     Configure if the map layers are nested in SVG groups.
+            Options:
+            nested=no               [default] Add a group per individual map layer
+            nested=yes|true         Embeds sub-layers into parent groups when possible (e.g. municipalities embedded within the region group)

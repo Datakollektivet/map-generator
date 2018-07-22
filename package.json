@@ -1,0 +1,22 @@
+{
+  "name": "map",
+  "version": "1.0.0",
+  "description": "## Synopsis We want a library that can generate a svg map of Denmark without having to invoke the map making process using D3. We can generate the SVG as is and then bind data to it whenever we need it.",
+  "main": "map-generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Datakollektivet/map.git"
+  },
+  "author": "Henrik Korsgaard",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Datakollektivet/map/issues"
+  },
+  "homepage": "https://github.com/Datakollektivet/map#readme",
+  "dependencies": {
+    "d3-node": "^2.0.1"
+  }
+}
