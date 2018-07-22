@@ -54,7 +54,8 @@ see `node map-generator.js help`
 
 ```
 
-See [client-example.html](map-generator/client-example.html) for complete code.
+See [client-example.html](client-example.html) for complete code.
+
 
 ### Features (will soon include)
 
