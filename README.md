@@ -14,7 +14,7 @@ The generated SVG is *responsive* O.o
 
 ### Usage
 
-`node map-generator <options>`
+`node map-generator.js <options>`
 
 see `node map-generator.js --help`
 
@@ -27,7 +27,7 @@ see `node map-generator.js --help`
 `node map-generator.js --quality low --output container --layers regions`
 
 ### Embed map and add style and interactivity
-1. Generate map `node map-generator layers=regions output=container`
+1. Generate map `node map-generator.js --layers regions --output container -p`
 2. Embed in a html page
 3. Style with css styling
 ```
