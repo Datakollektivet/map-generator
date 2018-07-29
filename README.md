@@ -16,10 +16,17 @@ The generated SVG is *responsive* O.o
 
 `node map-generator <options>`
 
-see `node map-generator.js help`
+see `node map-generator.js --help`
 
-### Embedding maps (example)
+### Examples
 
+#### Generate svg file with a compact map of Denmark
+`node map-generator.js --packed --quality high --output svg --layers denmark`
+
+#### Generate a low resolution regional map svg in a html container 
+`node map-generator.js --quality low --output container --layers regions`
+
+### Embed map and add style and interactivity
 1. Generate map `node map-generator layers=regions output=container`
 2. Embed in a html page
 3. Style with css styling
@@ -55,7 +62,6 @@ see `node map-generator.js help`
 ```
 
 See [client-example.html](client-example.html) for complete code.
-
 
 ### Features (will soon include)
 

@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Datakollektivet/map#readme",
   "dependencies": {
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.5",
     "d3-node": "^2.0.1",
-    "simplify-geojson": "^1.0.3"
+    "topojson": "^3.0.2"
   }
 }
