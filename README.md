@@ -27,7 +27,7 @@ see `node map-generator.js --help`
 `node map-generator.js --quality low --output container --layers regions`
 
 ### Embed map and add style and interactivity
-1. Generate map `node map-generator.js --layers regions --output container -p`
+1. Generate map `node map-generator.js --layers municipalities --output container -p`
 2. Embed in a html page
 3. Style with css styling
 ```
@@ -77,7 +77,7 @@ It is possible to generate a map with a single layer and/or multiple layers. Opt
 + Election districts * 
 + Jurisdiction districts *
 
-You define the layers by adding a cli argument, e.g. `node map-generator.js layers=denmark`. You can add multiple with `layers=all` or with comma seperation `layers=denmark, regions`.
+You define the layers by adding a cli argument, e.g. `node map-generator.js --layers denmark`. You can add multiple with comma seperation `--layers denmark, regions`.
 
 * Soon
 
@@ -88,32 +88,22 @@ It is possible to generate multiple file outputs. Options include:
 + SVG file (i.e. `<svg>...</svg>`)
 + Full HTML file (i.e. `<html><body><div id="<id>"><svg>...</svg></div></body></html>`)
 
-You define the output format by adding a cli argument, e.g. `node map-generator.js output=container`. You can add multiple with `output=all` or with comma seperation `output=container, html`.
+You define the output format by adding a cli argument, e.g. `node map-generator.js --output container`. You can add multiple with `--output all` or with comma seperation `--output container, html`.
 
-#### Configure nested maps
-It is possible to either have the individual map layers as isolated SVG groups or embed child geometries in parent geometries (e.g. municipalities within each region group). The latter allow various zooming features where you can render the municipalities within a specific region when needed. Options include:
-
-+ no|false [Default]
-+ yes|true
-
-You add nested geometries by adding the cli argument  `node map-generator.js nested=true`.
 
 #### Configure style (or complexity)
 It is possible to generate maps that directly reflect the underlyig geojson, but also generate maps that have simpler geometries to make more stylistic and visually simpler maps. Options include:
 
-+ plain [default]
-+ simplified
-+ ?
-
-
-
++ high (naturalistic)
++ mid (default)
++ low (polygons)
++ artsy (very low polygons)
++ pixel (pixelarated)
 
 ### TODO
 
-0. Convert to topojson with properties for better simplification library
 1. Add all the map layers
-2. Add full cli configuration
-4. Add stylistic simplification
+2. Add features to groups (region, municipalities) to make interaction and styling easier
 5. Add custom container ID (e.g. to fit Datakollektivet production serial)
 
 
