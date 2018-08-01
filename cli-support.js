@@ -20,7 +20,7 @@ const cliOptions = [
         type: String,
         multiple: true,
         typeLabel: '{underline string}',
-        description: 'Layers to include in the map. Options: denmark, regions, {bold and/or} municipalities. {bold [default denmark]}.\n{bold Note: Adding to many layers will result in a large generated SVG.}',
+        description: 'Layers to include in the map. Options: denmark, regions, municipalities, postalcodes, parishes, constituencies (election area), jurisdictions (legal) {bold and/or} precincts (police) . {bold [default denmark]}.\n{bold Note: Adding to many layers will result in a large generated SVG.}',
         defaultValue: "denmark"
     },
     {

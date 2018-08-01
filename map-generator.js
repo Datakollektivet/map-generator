@@ -93,8 +93,8 @@ if (options.packed) {
 
     let bornholmBounds = path.bounds(bornholm);
 
-    let boundWidth = bornholmBounds[1][0] - bornholmBounds[0][0] + 30;
-    let boundHeight = bornholmBounds[1][1] - bornholmBounds[0][1] + 30;
+    let boundWidth = bornholmBounds[1][0] - bornholmBounds[0][0] + 20;
+    let boundHeight = bornholmBounds[1][1] - bornholmBounds[0][1] + 20;
 
     svg.append("g")
         .attr("class", "datakollektivet-dkmap-bornholm-box")
@@ -102,13 +102,13 @@ if (options.packed) {
 
     svg.select(".datakollektivet-dkmap-bornholm-box")
         .append("rect")
-        .attr("stroke", "grey")
-        .attr("stroke-width", 1)
+        .attr("stroke", "#bbbbbb")
+        .attr("stroke-width", 0.5)
         .attr("fill", "transparent")
         .attr("width", boundWidth)
         .attr("height", boundHeight)
-        .attr("x", bornholmBounds[0][0] - 15)
-        .attr("y", bornholmBounds[0][1] - 15);
+        .attr("x", bornholmBounds[0][0] - 10)
+        .attr("y", bornholmBounds[0][1] - 10);
 }
 
 
@@ -119,8 +119,9 @@ if (options.layers.indexOf("denmark") != -1) {
         .attr("d", path)
         .attr("class", "danmark id000")
         .attr("stroke", "black")
+        .attr("stroke-width", 0.5)
         .attr("fill", "transparent")
-        .attr("data-name", "Danmark"); //Name of the path.
+        .attr("data-navn", "Danmark"); //Name of the path.
 
     svg.select(".datakollektivet-dkmap-bornholm-box")
         .append("path")
@@ -128,8 +129,9 @@ if (options.layers.indexOf("denmark") != -1) {
         .attr("d", path)
         .attr("class", "bornholm danmark id000")
         .attr("stroke", "black")
+        .attr("stroke-width", 0.5)
         .attr("fill", "transparent")
-        .attr("data-name", "Danmark"); //Name of the path.
+        .attr("data-navn", "Danmark"); //Name of the path.
 }
 
 
@@ -147,16 +149,18 @@ if (options.layers.indexOf("regions") != -1) {
                 svg.select(".datakollektivet-dkmap-bornholm-box")
                     .append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
                     .attr("class", "region id" + d.properties.REGIONKODE.substring(1, 4))
-                    .attr("data-name", d.properties.REGIONNAVN);
+                    .attr("data-navn", d.properties.REGIONNAVN);
 
             } else {
                 svg.append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
                     .attr("class", "region id" + d.properties.REGIONKODE.substring(1, 4))
-                    .attr("data-name", d.properties.REGIONNAVN);
+                    .attr("data-navn", d.properties.REGIONNAVN);
             }
         });
 }
@@ -177,25 +181,189 @@ if (options.layers.indexOf("municipalities") != -1) {
                 svg.select(".datakollektivet-dkmap-bornholm-box")
                     .append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
                     .attr("class", "kommune id" + d.properties.KOMKODE.substring(1, 4))
-                    .attr("data-name", d.properties.KOMNAVN);
+                    .attr("data-navn", d.properties.KOMNAVN);
             } else {
                 svg.append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
                     .attr("class", "kommune id" + d.properties.KOMKODE.substring(1, 4))
-                    .attr("data-name", d.properties.KOMNAVN);
+                    .attr("data-navn", d.properties.KOMNAVN);
             }
         });
 }
 
+if (options.layers.indexOf("postalcodes") != -1) {
+    let postalcodesTopo = JSON.parse(fs.readFileSync("./topojson/postnumre.topojson"));
 
-if(options.output === "svg"){
+    let postalcodesQuantize = topojson.quantize(postalcodesTopo, quality[options.quality].q);
+    let postalcodesSimplified = topojson.simplify(topojson.presimplify(postalcodesQuantize), quality[options.quality].s);
+    let postalcodes = topojson.feature(postalcodesSimplified, postalcodesSimplified.objects.postnumre);
+
+    svg.selectAll("path")
+        .data(postalcodes.features)
+        .enter()
+        .each(function (d) {
+
+            if (options.packed && isInBornholm(d.geometry)) {
+                svg.select(".datakollektivet-dkmap-bornholm-box")
+                    .append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "postnummer id" + d.properties.POSTNR_TXT)
+                    .attr("data-navn", d.properties.POSTBYNAVN);
+            } else {
+                svg.append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "postnummer id" + d.properties.POSTNR_TXT)
+                    .attr("data-navn", d.properties.POSTBYNAVN);
+            }
+        });
+}
+
+if (options.layers.indexOf("parishes") != -1) {
+    let parishesTopo = JSON.parse(fs.readFileSync("./topojson/sogne.topojson"));
+
+    let parishesQuantize = topojson.quantize(parishesTopo, quality[options.quality].q);
+    let parishesSimplified = topojson.simplify(topojson.presimplify(parishesQuantize), quality[options.quality].s);
+    let parishes = topojson.feature(parishesSimplified, parishesSimplified.objects.sogne);
+
+    svg.selectAll("path")
+        .data(parishes.features)
+        .enter()
+        .each(function (d) {
+
+            if (options.packed && isInBornholm(d.geometry)) {
+                svg.select(".datakollektivet-dkmap-bornholm-box")
+                    .append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "sogn id" + d.properties.SOGNEKODE)
+                    .attr("data-navn", d.properties.SOGNENAVN);
+            } else {
+                svg.append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "sogn id" + d.properties.SOGNEKODE)
+                    .attr("data-navn", d.properties.SOGNENAVN);
+            }
+        });
+}
+
+if (options.layers.indexOf("constituencies") != -1) {
+    let constituenciesTopo = JSON.parse(fs.readFileSync("./topojson/opstillingskredse.topojson"));
+
+    let constituenciesQuantize = topojson.quantize(constituenciesTopo, quality[options.quality].q);
+    let constituenciesSimplified = topojson.simplify(topojson.presimplify(constituenciesQuantize), quality[options.quality].s);
+    let constituencies = topojson.feature(constituenciesSimplified, constituenciesSimplified.objects.opstillingskredse);
+
+    svg.selectAll("path")
+        .data(constituencies.features)
+        .enter()
+        .each(function (d) {
+
+            if (options.packed && isInBornholm(d.geometry)) {
+                svg.select(".datakollektivet-dkmap-bornholm-box")
+                    .append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "opstillingskreds id" + d.properties.OPSTILKRNR)
+                    .attr("data-navn", d.properties.OPSTILNAVN)
+                    .attr("data-valgkreds", d.properties.VALGKRNR)
+                    .attr("data-storkreds", d.properties.STORKRNR)
+                    .attr("data-storkredsnavn", d.properties.STORKRNAVN);
+            } else {
+                svg.append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "opstillingskreds id" + d.properties.OPSTILKRNR)
+                    .attr("data-navn", d.properties.OPSTILNAVN)
+                    .attr("data-valgkreds", d.properties.VALGKRNR)
+                    .attr("data-storkreds", d.properties.STORKRNR)
+                    .attr("data-storkredsnavn", d.properties.STORKRNAVN);
+            }
+        });
+}
+
+//HERE
+
+if (options.layers.indexOf("jurisdictions") != -1) {
+    let jurisdictionsTopo = JSON.parse(fs.readFileSync("./topojson/retskredse.topojson"));
+
+    let jurisdictionsQuantize = topojson.quantize(jurisdictionsTopo, quality[options.quality].q);
+    let jurisdictionsSimplified = topojson.simplify(topojson.presimplify(jurisdictionsQuantize), quality[options.quality].s);
+    let jurisdictions = topojson.feature(jurisdictionsSimplified, jurisdictionsSimplified.objects.retskredse);
+
+    svg.selectAll("path")
+        .data(jurisdictions.features)
+        .enter()
+        .each(function (d) {
+
+            if (options.packed && isInBornholm(d.geometry)) {
+                svg.select(".datakollektivet-dkmap-bornholm-box")
+                    .append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "retskreds id" + d.properties.RETSKRNR)
+                    .attr("data-navn", d.properties.RETSKRNAVN);
+            } else {
+                svg.append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "retskreds id" + d.properties.RETSKRNR)
+                    .attr("data-navn", d.properties.RETSKRNAVN);
+            }
+        });
+}
+
+if (options.layers.indexOf("precincts") != -1) {
+    let precinctsTopo = JSON.parse(fs.readFileSync("./topojson/politikredse.topojson"));
+
+    let precinctsQuantize = topojson.quantize(precinctsTopo, quality[options.quality].q);
+    let precinctsSimplified = topojson.simplify(topojson.presimplify(precinctsQuantize), quality[options.quality].s);
+    let precincts = topojson.feature(precinctsSimplified, precinctsSimplified.objects.politikredse);
+
+    svg.selectAll("path")
+        .data(precincts.features)
+        .enter()
+        .each(function (d) {
+
+            if (options.packed && isInBornholm(d.geometry)) {
+                svg.select(".datakollektivet-dkmap-bornholm-box")
+                    .append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "politikreds id" + d.properties.POLKR_NR)
+                    .attr("data-navn", d.properties.POLKR_NAVN);
+            } else {
+                svg.append("path").attr("d", path(d.geometry))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("fill", "transparent")
+                    .attr("class", "politikreds id" + d.properties.POLKR_NR)
+                    .attr("data-navn", d.properties.POLKR_NAVN);
+            }
+        });
+}
+
+if(options.output.indexOf("svg") > -1){
     fs.writeFileSync('map.svg', d3n.svgString());
-} else if (options.output === "html") {
+} else if (options.output.indexOf("html") > -1) {
     fs.writeFileSync('map.html', d3n.html());
-} else if (options.output === "container") {
+} else if (options.output.indexOf("container") > -1) {
     fs.writeFileSync('map_container.html', d3n.chartHTML());
 } else {
     fs.writeFileSync('map_container.html', d3n.chartHTML());
