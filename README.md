@@ -71,15 +71,14 @@ It is possible to generate a map with a single layer and/or multiple layers. Opt
 + Denmark outline [Default]
 + Regions
 + Municipalities
-+ Postal code areas *
-+ Parishes *
-+ Police districts *
-+ Election districts * 
-+ Jurisdiction districts *
++ Postalcodes
++ Parishes
++ Precincts (police)
++ Constituencies (election) 
++ Jurisdictions (legal)
 
 You define the layers by adding a cli argument, e.g. `node map-generator.js --layers denmark`. You can add multiple with comma seperation `--layers denmark, regions`.
 
-* Soon
 
 #### Define output format
 It is possible to generate multiple file outputs. Options include:
@@ -89,7 +88,6 @@ It is possible to generate multiple file outputs. Options include:
 + Full HTML file (i.e. `<html><body><div id="<id>"><svg>...</svg></div></body></html>`)
 
 You define the output format by adding a cli argument, e.g. `node map-generator.js --output container`. You can add multiple with `--output all` or with comma seperation `--output container, html`.
-
 
 #### Configure style (or complexity)
 It is possible to generate maps that directly reflect the underlyig geojson, but also generate maps that have simpler geometries to make more stylistic and visually simpler maps. Options include:
@@ -102,9 +100,9 @@ It is possible to generate maps that directly reflect the underlyig geojson, but
 
 ### TODO
 
-1. Add all the map layers
 2. Add features to groups (region, municipalities) to make interaction and styling easier
 5. Add custom container ID (e.g. to fit Datakollektivet production serial)
+6. The constituents map contain several layers (regional, large area and individual constituents). They should be extracted (merged) and offered as individual layers.
 
 
 
