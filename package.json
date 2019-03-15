@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Datakollektivet/map.git"
-},
+  },
   "author": "Henrik Korsgaard",
   "license": "MIT",
   "bugs": {
