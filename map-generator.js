@@ -156,7 +156,6 @@ if (options.layers.indexOf("regions") != -1) {
         .enter()
         .each(function (d) {
             let r = svg.select("g#region" + d.properties.REGIONKODE.substring(1, 4))            
-            console.log(r)
             if (options.packed && d.properties.REGIONKODE === "1084" && isInBornholm(d.geometry) && r.empty()) {
                 r = svg.select(".dkmap-bornholm-box")
                     .append("g")
@@ -315,7 +314,6 @@ if (options.layers.indexOf("constituencies") != -1) {
         });
 }
 
-//HERE
 
 if (options.layers.indexOf("jurisdictions") != -1) {
     let jurisdictionsTopo = JSON.parse(fs.readFileSync("./topojson/retskredse.topojson"));
