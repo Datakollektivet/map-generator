@@ -97,10 +97,10 @@ if (options.packed) {
     let boundHeight = bornholmBounds[1][1] - bornholmBounds[0][1] + 20;
 
     svg.append("g")
-        .attr("class", "datakollektivet-dkmap-bornholm-box")
+        .attr("class", "dkmap-bornholm-box")
         .attr("transform", "translate(-250, -400)");
 
-    svg.select(".datakollektivet-dkmap-bornholm-box")
+    svg.select(".dkmap-bornholm-box")
         .append("rect")
         .attr("stroke", "#bbbbbb")
         .attr("stroke-width", 0.5)
@@ -114,10 +114,12 @@ if (options.packed) {
 
 if (options.layers.indexOf("denmark") != -1) {
 
-    svg.append("path")
+
+    svg.append("g")
+        .attr("class", "Denmark id000") //needs to be a g-layer
+        .append("path")
         .datum(denmarkWithoutBornholm)
         .attr("d", path)
-        .attr("class", "danmark id000")
         .attr("stroke", "black")
         .attr("stroke-width", 0.5)
         .attr("fill", "transparent")
@@ -146,8 +148,12 @@ if (options.layers.indexOf("regions") != -1) {
         .enter()
         .each(function (d) {
             if (options.packed && d.properties.REGIONKODE === "1084" && isInBornholm(d.geometry)) {
-                svg.select(".datakollektivet-dkmap-bornholm-box")
-                    .append("path").attr("d", path(d.geometry))
+                var r = svg.select("#r"+ d.properties.REGIONKODE.substring(1, 4))
+                if(r.empty()){
+                    r =  svg.select(".dkmap-bornholm-box").append("g").attr("id", "r"+ d.properties.REGIONKODE.substring(1, 4))
+                }
+                
+                r.append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
@@ -155,11 +161,16 @@ if (options.layers.indexOf("regions") != -1) {
                     .attr("data-navn", d.properties.REGIONNAVN);
 
             } else {
-                svg.append("path").attr("d", path(d.geometry))
+                var r = svg.select("#r"+ d.properties.REGIONKODE.substring(1, 4))
+                if(r.empty()){
+                    r =  svg.append("g").attr("id", "r"+ d.properties.REGIONKODE.substring(1, 4))
+                }
+
+                r.append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
-                    .attr("class", "region id" + d.properties.REGIONKODE.substring(1, 4))
+                    .attr("class", "region")
                     .attr("data-navn", d.properties.REGIONNAVN);
             }
         });
@@ -176,21 +187,21 @@ if (options.layers.indexOf("municipalities") != -1) {
         .data(municipalities.features)
         .enter()
         .each(function (d) {
-
+            console.log(d)
             if (options.packed && isInBornholm(d.geometry)) {
-                svg.select(".datakollektivet-dkmap-bornholm-box")
+                svg.select(".dkmap-bornholm-box")
                     .append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
-                    .attr("class", "kommune id" + d.properties.KOMKODE.substring(1, 4))
+                    .attr("class", "municipality id" + d.properties.KOMKODE.substring(1, 4))
                     .attr("data-navn", d.properties.KOMNAVN);
             } else {
                 svg.append("path").attr("d", path(d.geometry))
                     .attr("stroke", "black")
                     .attr("stroke-width", 0.5)
                     .attr("fill", "transparent")
-                    .attr("class", "kommune id" + d.properties.KOMKODE.substring(1, 4))
+                    .attr("class", "municipality id" + d.properties.KOMKODE.substring(1, 4))
                     .attr("data-navn", d.properties.KOMNAVN);
             }
         });
