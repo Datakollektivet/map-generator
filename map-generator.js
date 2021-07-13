@@ -382,6 +382,39 @@ if (options.layers.indexOf("precincts") != -1) {
         });
 }
 
+if (options.layers.indexOf("parish") != -1) {
+    let parishTopo = JSON.parse(fs.readFileSync("./topojson/sogne.topojson"));
+
+    let parishQuantize = topojson.quantize(parishTopo, quality[options.quality].q);
+    let parishSimplified = topojson.simplify(topojson.presimplify(parishQuantize), quality[options.quality].s);
+    let parishes = topojson.feature(parishSimplified, parishSimplified.objects.sogne);
+
+    svg.selectAll("path")
+        .data(parishes.features)
+        .enter()
+        .each(function (d) {
+            let p = svg.select("g#parish"+d.properties.SOGNEKODE)
+            if (options.packed && isInBornholm(d.geometry) && p.empty()) {
+                p = svg.select(".dkmap-bornholm-box")
+                    .append("g")
+                    .attr("id", "parish"  + d.properties.SOGNEKODE)
+                    .attr("class", "parish")
+                    .attr("data-name", d.properties.SOGNENAVN)
+                    
+            } else if(p.empty()){
+                    p = svg .append("g")
+                    .attr("id", "parish"  + d.properties.SOGNEKODE)
+                    .attr("class", "parish")
+                    .attr("data-name", d.properties.SOGNENAVN);    
+            }
+
+            p.append("path").attr("d", path(d.geometry))
+            .attr("stroke", "black")
+            .attr("stroke-width", 0.5)
+            .attr("fill", "transparent");
+        });
+}
+
 if(options.output.indexOf("svg") > -1){
     fs.writeFileSync('map.svg', d3n.svgString());
 } else if (options.output.indexOf("html") > -1) {
