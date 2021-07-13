@@ -126,9 +126,6 @@ if (options.layers.indexOf("denmark") != -1) {
         .datum(denmarkWithoutBornholm)
         .attr("d", path)
         .attr("class", "denmark")
-        .attr("stroke", "black")
-        .attr("stroke-width", 0.5)
-        .attr("fill", "transparent")
         .attr("data-navn", "Danmark"); //Name of the path.
 
     svg.select(".dkmap-bornholm-box")
@@ -138,9 +135,6 @@ if (options.layers.indexOf("denmark") != -1) {
         .datum(bornholm)
         .attr("d", path)
         .attr("class", "bornholm denmark")
-        .attr("stroke", "black")
-        .attr("stroke-width", 0.5)
-        .attr("fill", "transparent")
         .attr("data-navn", "Danmark"); //Name of the path.
 }
 
@@ -171,9 +165,6 @@ if (options.layers.indexOf("regions") != -1) {
             }
 
             r.append("path").attr("d", path(d.geometry))
-                .attr("stroke", "black")
-                .attr("stroke-width", 0.5)
-                .attr("fill", "transparent");
         });
 }
 
@@ -204,9 +195,6 @@ if (options.layers.indexOf("municipalities") != -1) {
 
             m.append("path")
             .attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent")
         });
 }
 
@@ -237,9 +225,6 @@ if (options.layers.indexOf("postalcodes") != -1) {
             }
 
             p.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent")
         });
 }
 
@@ -269,9 +254,6 @@ if (options.layers.indexOf("parishes") != -1) {
             }
 
             p.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent")
         });
 }
 
@@ -308,9 +290,6 @@ if (options.layers.indexOf("constituencies") != -1) {
             }
 
             c.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent")
         });
 }
 
@@ -342,9 +321,6 @@ if (options.layers.indexOf("jurisdictions") != -1) {
             }
 
             j.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent");
         });
 }
 
@@ -376,9 +352,6 @@ if (options.layers.indexOf("precincts") != -1) {
             }
 
             p.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent");
         });
 }
 
@@ -409,9 +382,6 @@ if (options.layers.indexOf("parish") != -1) {
             }
 
             p.append("path").attr("d", path(d.geometry))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.5)
-            .attr("fill", "transparent");
         });
 }
 
