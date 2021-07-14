@@ -62,28 +62,9 @@ let path = d3.geoPath()
 const regionsTopo = JSON.parse(fs.readFileSync("./topojson/regioner.topojson"));
 let denmarkQuantize = topojson.quantize(regionsTopo, quality[options.quality].q);
 let denmarkSimplified = topojson.simplify(topojson.presimplify(denmarkQuantize), quality[options.quality].s);
+let denmark = topojson.feature(denmarkSimplified, denmarkSimplified.objects.regioner);
 
-let denmarkWithoutBornholm = topojson.merge(denmarkSimplified, denmarkSimplified.objects.regioner.geometries.filter(function (d, i) {
-    if (i == 1 || i == 2 || i == 6 || i == 5) {
-        return false;
-    } else {
-        return true;
-    }
-}));
-
-let bornholm = topojson.merge(denmarkSimplified, denmarkSimplified.objects.regioner.geometries.filter(function (d, i) {
-    if (i == 1 || i == 2 || i == 6 || i == 5) {
-        return true;
-    }
-}));
-
-let bounds;
-
-if (options.packed) {
-    bounds = path.bounds(denmarkWithoutBornholm);
-} else {
-    bounds = path.bounds(topojson.feature(regionsTopo, regionsTopo.objects.regioner));
-}
+let bounds = path.bounds(topojson.feature(regionsTopo, regionsTopo.objects.regioner));
 
 //Translating the projection so the map is positioned correctly
 projection
@@ -95,8 +76,21 @@ let svg = d3n.createSVG(0, 0);
 svg.attr("viewBox", "0 0 " + viewBoxWidth + " " + viewBoxHeight);
 
 if (options.packed) {
+    let denmarkWithoutBornholm = topojson.merge(denmarkSimplified, denmarkSimplified.objects.regioner.geometries.filter(function (d, i) {
+        if (i == 1 || i == 2 || i == 6 || i == 5) {
+            return false;
+        } else {
+            return true;
+        }
+    }));
+    
+    let bornholm = topojson.merge(denmarkSimplified, denmarkSimplified.objects.regioner.geometries.filter(function (d, i) {
+        if (i == 1 || i == 2 || i == 6 || i == 5) {
+            return true;
+        }
+    }));
 
-
+    bounds = path.bounds(denmarkWithoutBornholm);
     let bornholmBounds = path.bounds(bornholm);
 
     let boundWidth = bornholmBounds[1][0] - bornholmBounds[0][0] + 20;
@@ -115,12 +109,12 @@ if (options.packed) {
         .attr("height", boundHeight)
         .attr("x", bornholmBounds[0][0] - 10)
         .attr("y", bornholmBounds[0][1] - 10);
-}
-
+} 
 
 if (options.layers.indexOf("denmark") != -1) {
 
-    svg.append("g")
+    if (options.packed){
+        svg.append("g")
         .attr("id", "denmark000")
         .append("path")
         .datum(denmarkWithoutBornholm)
@@ -128,7 +122,7 @@ if (options.layers.indexOf("denmark") != -1) {
         .attr("class", "denmark")
         .attr("data-navn", "Danmark"); //Name of the path.
 
-    svg.select(".dkmap-bornholm-box")
+        svg.select(".dkmap-bornholm-box")
         .append("g")
         .attr("id", "denmark000bornholm")
         .append("path")
@@ -136,8 +130,16 @@ if (options.layers.indexOf("denmark") != -1) {
         .attr("d", path)
         .attr("class", "bornholm denmark")
         .attr("data-navn", "Danmark"); //Name of the path.
+    } else {
+        svg.append("g")
+        .attr("id", "denmark000")
+        .append("path")
+        .datum(denmark)
+        .attr("d", path)
+        .attr("class", "denmark")
+        .attr("data-navn", "Danmark");
+    }
 }
-
 
 if (options.layers.indexOf("regions") != -1) {
 
