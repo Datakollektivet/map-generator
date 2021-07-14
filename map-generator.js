@@ -6,13 +6,6 @@ const topojson = require("topojson");
 const D3Node = require("d3-node");
 const options = require("./cli-support.js");
 
-/*
-
-The map does not include hieracical relations, e.g. municipalities being appended to specific region group. 
-The geographic data and data on administractive boundries contains several overlaps (e.g. postal area spanning municipality, parish not beloing to any municipality etc.).
-
-*/
-
 const quality = {
     high: {
         q: 10000,
@@ -36,14 +29,15 @@ const quality = {
     }
 };
 
+const hierarchy = ["denmark", "regions", "police", "jurisdictions", "constituencies", "municipalities", "postal", "parishes"]
+
 //We set the viewbox width depending on if the map is packed.
 //If options.packed is true, we make a rectangle
 let viewBoxWidth = options.packed ? 500 : 800;
 let viewBoxHeight = 600;
 
-
 const d3options = {
-    selector: '#datakollektivet-i0001',
+    selector: '#datakollektivet-i0001', //Change this somewhere to allow us to have project based maps
     container: '<div id="datakollektivet-i0001"><meta charset="utf-8" /></div>'
 };
 
@@ -58,11 +52,20 @@ let projection = d3.geoMercator()
 let path = d3.geoPath()
     .projection(projection);
 
+
 //We always load Denmark, because we need the bounds (although this could be done for every layer).
 const regionsTopo = JSON.parse(fs.readFileSync("./topojson/regioner.topojson"));
 let denmarkQuantize = topojson.quantize(regionsTopo, quality[options.quality].q);
 let denmarkSimplified = topojson.simplify(topojson.presimplify(denmarkQuantize), quality[options.quality].s);
 let denmark = topojson.feature(denmarkSimplified, denmarkSimplified.objects.regioner);
+
+//layers = sortLayers(options.layers)
+
+
+/*
+
+
+
 
 let bounds = path.bounds(topojson.feature(regionsTopo, regionsTopo.objects.regioner));
 
@@ -109,10 +112,10 @@ if (options.packed) {
         .attr("height", boundHeight)
         .attr("x", bornholmBounds[0][0] - 10)
         .attr("y", bornholmBounds[0][1] - 10);
-} 
+}
+
 
 if (options.layers.indexOf("denmark") != -1) {
-
     if (options.packed){
         svg.append("g")
         .attr("id", "denmark000")
@@ -406,4 +409,6 @@ function isInBornholm(geometry) {
     } else {
         return false;
     }
-}
+} 
+
+*/
