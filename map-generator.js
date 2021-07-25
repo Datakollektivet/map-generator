@@ -2,6 +2,9 @@
 'use strict';
 
 /*
+    Source maps on Dataforsyningen
+    https://api.dataforsyningen.dk/DAGI_250MULTIGEOM_GMLSFP_DAF?service=WFS&request=GetCapabilities&token=
+
     Script for generating geojson from shapefiles 
     ogr2ogr -f GeoJSON -t_srs crs:84  ../geojson/sogne.geojson sogne.shp
 
@@ -21,7 +24,8 @@ const { exit } = require("process");
 const { time } = require("console");
 const { createBrotliDecompress } = require("zlib");
 
-//TODO: Individual areas
+//TODO: Update README.md
+//TODO: Individual areas - this is 
 //TODO: Voting districts as a layer option
 
 const quality = {
@@ -51,7 +55,7 @@ const hierarchy = ["danmark", "regioner", "kommuner", "sogne"]
 
 //We set the viewbox width depending on if the map is packed.
 //If options.packed is true, we make a rectangle
-let viewBoxWidth = options.packed ? 500 : 800;
+let viewBoxWidth = options.packed ? 500 : 700;
 let viewBoxHeight = 600;
 
 const d3options = {
@@ -62,21 +66,11 @@ const d3options = {
 const d3n = new D3Node(d3options); // initializes D3 with container element
 const d3 = d3n.d3;
 
-//Setting up map projection 
-let projection = d3.geoMercator()
-    .scale(5500)
-    .translate([0, 0])
-
-let path = d3.geoPath()
-    .projection(projection);
-
 //We always load Denmark, because we need the bounds (although this could be done for every layer).
 const regionsTopo = JSON.parse(fs.readFileSync("./data/topojson/regioner.topojson"));
 let denmarkQuantize = topojson.quantize(regionsTopo, quality[options.quality].q);
 let denmarkSimplified = topojson.simplify(topojson.presimplify(denmarkQuantize), quality[options.quality].s);
 let denmark = topojson.feature(denmarkSimplified, denmarkSimplified.objects.regioner);
-
-let bounds = path.bounds(topojson.feature(regionsTopo, regionsTopo.objects.regioner));
 
 //We need the geography of Bornholm to be able to filter!
 let bornholm = topojson.merge(denmarkSimplified, denmarkSimplified.objects.regioner.geometries.filter(function (d, i) {
@@ -88,8 +82,15 @@ let denmarkWithoutBornholm = topojson.merge(denmarkSimplified, denmarkSimplified
     return d.properties.navn !== "Bornholm"
 }));
 
-//Translating the projection so the map is positioned correctly
-projection.translate([viewBoxWidth / 2 - (bounds[0][0] + bounds[1][0]) / 2, viewBoxHeight / 2 - (bounds[0][1] + bounds[1][1]) / 2]);
+let fitter = options.packed ? denmarkWithoutBornholm : denmark
+
+//Setting up map projection 
+let projection = d3.geoMercator().fitSize([viewBoxWidth,viewBoxHeight], fitter)
+  
+let path = d3.geoPath()
+    .projection(projection);
+
+let bounds = path.bounds(topojson.feature(regionsTopo, regionsTopo.objects.regioner))
 
 //Create svg with zero width and height. We do not want width and hight, but use viewbox instead for responsive design
 let svg = d3n.createSVG(0, 0);
@@ -220,8 +221,7 @@ if (options.packed) {
         .attr("x", bornholmBounds[0][0] - 10)
         .attr("y", bornholmBounds[0][1] - 10);
 
-    dk_bornholm.attr("transform", "translate(-250, -400)");
-    
+    dk_bornholm.attr("transform", "translate(-280, -430)");
 }
 
 if (options.output.indexOf("svg") > -1) {
