@@ -20,9 +20,6 @@ const fs = require("fs");
 const topojson = require("topojson");
 const D3Node = require("d3-node");
 const options = require("./cli-support.js");
-const { exit } = require("process");
-const { time } = require("console");
-const { createBrotliDecompress } = require("zlib");
 
 //TODO: Update README.md
 //TODO: Individual areas - this is 
