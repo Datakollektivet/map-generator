@@ -27,7 +27,7 @@ const cliOptions = [
         type: String,
         multiple: true,
         typeLabel: '{underline string}',
-        description: 'Layers to include in the map. Note: keys are given in Danish. Options: danmark, regioner, kommuner {bold and/or} sogne. {bold [default danmark]}.\n{bold Note: Adding to many layers will result in a large SVG.}',
+        description: 'Layers to include in the map. Note: keys are given in Danish. Options: danmark, regioner, kommuner, sogne, storkredse, opstillingskredse {bold and/or} afstemningsområde. {bold [default danmark]}.\n{bold Note: Adding to many layers will result in a large SVG.}',
         defaultValue: "danmark"
     },
     {
@@ -71,7 +71,7 @@ let sections = [{
 ];
 
 let options;
-let validLayers = ['danmark', 'regioner', 'kommuner', 'sogne']
+let validLayers = ['danmark', 'regioner', 'kommuner', 'sogne', 'afstemningsområde', 'opstillingskredse', 'storkredse']
 let validFormat = ['svg', 'html', 'container', 'all']
 
 try {
@@ -93,7 +93,7 @@ try {
         let validateLayers = options.layers.some(r=> validLayers.indexOf(r) != -1)
         
         if(!validateLayers){
-            throw new Error('There is an error in the "layers" key provided. Valid options are: danmark, regioner, kommuner, sogne. Default is: danmark')
+            throw new Error('There is an error in the "layers" key provided. Valid options are: danmark, regioner, kommuner, sogne, storkredse, opstillingskredse {bold and/or} afstemningsområde. Default is: danmark')
         }
 
         let validateFormat = options.format.some(r=> validFormat.indexOf(r) != -1)

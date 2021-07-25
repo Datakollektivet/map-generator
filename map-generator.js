@@ -21,7 +21,6 @@ const topojson = require("topojson");
 const D3Node = require("d3-node");
 const options = require("./cli-support.js");
 
-//TODO: Update README.md
 //TODO: Individual areas - this is 
 //TODO: Voting districts as a layer option
 
@@ -48,7 +47,7 @@ const quality = {
     }
 };
 
-const hierarchy = ["danmark", "regioner", "kommuner", "sogne"]
+const hierarchy = ["danmark","regioner","storkredse","opstillingskredse","kommuner","afstemningsområde","sogne"]
 
 //We set the viewbox width depending on if the map is packed.
 //If options.packed is true, we make a rectangle
@@ -202,6 +201,63 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
                         .attr("data-name", d.properties.navn);
                 }
                 g.append("path").attr("d", path(d.geometry))
+            })
+    }
+
+    if (layer === "storkredse"){
+        let storkredseTopo = JSON.parse(fs.readFileSync("./data/topojson/storkredse.topojson"));
+
+        let storkredseQuantize = topojson.quantize(storkredseTopo, quality[options.quality].q);
+        let storkredseSimplified = topojson.simplify(topojson.presimplify(storkredseQuantize), quality[options.quality].s);
+        let storkredse = topojson.feature(storkredseSimplified, storkredseSimplified.objects.storkredse);
+
+        svg.selectAll("g.storkreds")
+            .data(storkredse.features)
+            .enter()
+            .each(function (d) {
+                
+                let sid = d.properties.storkredsn
+
+                let map_group = (sid === 4) ? dk_bornholm : dk_main 
+                let g = map_group.select("g.stid" + sid).empty() ? map_group : map_group.select("g.stid" + sid)
+
+                if (g.attr("class").indexOf("storkreds") == -1) {
+                    g = g.append("g")
+                        .attr("class", "storkreds stid" + sid)
+                        .attr("data-name", d.properties.navn);
+                }
+                g.append("path").attr("d", path(d.geometry))
+                
+            })
+    }
+
+    if (layer === "opstillingskredse"){
+        let opstillingskredseTopo = JSON.parse(fs.readFileSync("./data/topojson/opstillingskredse.topojson"));
+
+        let opstillingskredseQuantize = topojson.quantize(opstillingskredseTopo, quality[options.quality].q);
+        let opstillingskredseSimplified = topojson.simplify(topojson.presimplify(opstillingskredseQuantize), quality[options.quality].s);
+        let opstillingskredse = topojson.feature(opstillingskredseSimplified, opstillingskredseSimplified.objects.opstillingskredse);
+
+        svg.selectAll("g.opstillingskreds")
+            .data(opstillingskredse.features)
+            .enter()
+            .each(function (d) {   
+               
+                let sid = d.properties.storkredsn
+                let oid = d.properties.opstilling
+
+                let map_group = (oid === 27 || oid === 28) ? dk_bornholm : dk_main
+
+                let g = map_group.select("g.stid" + sid).empty() ? map_group : map_group.select("g.stid" + sid)
+                g = map_group.select("g.oid" + oid).empty() ? g : map_group.select("g.oid" + oid)
+
+                if (g.attr("class").indexOf("opstillingskreds") == -1) {
+                    g = g.append("g")
+                        .attr("class", "opstillingskreds oid" + oid)
+                        .attr("data-name", d.properties.navn);
+                }
+                g.append("path").attr("d", path(d.geometry))
+                
             })
     }
 }

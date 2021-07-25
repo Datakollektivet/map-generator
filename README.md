@@ -70,7 +70,6 @@ You define the layers by adding a cli argument, e.g. `node map-generator.js --la
 #### Define output format
 It is possible to generate multiple file outputs. Options include:
 
-
 + SVG file (i.e. `<svg>...</svg>`)
 + Full HTML file (i.e. `<html><body><div id="<id>"><svg>...</svg></div></body></html>`)
 + HTML file with container (i.e. `<div id="<id>"><svg>...</svg></div>`) [Default]
