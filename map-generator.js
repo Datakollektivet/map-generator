@@ -103,6 +103,11 @@ options.layers.sort(function (a, b) {
     return hierarchy.indexOf(a) - hierarchy.indexOf(b);
 });
 
+//We need the outline to be "doubled" to make sure that the stroke-width is equal to borders
+if(options.layers.indexOf("danmark") == -1){
+    options.layers.unshift("danmark")
+}
+
 // We know the layers are sorted. Hence, we can check if the prior layer exist
 for (var i = 0, n = options.layers.length; i < n; i++) {
     let layer = options.layers[i]
@@ -221,13 +226,12 @@ if (options.packed) {
     dk_bornholm.attr("transform", "translate(-280, -430)");
 }
 
-if (options.output.indexOf("svg") > -1) {
-    fs.writeFileSync('output/map.svg', d3n.svgString());
-} else if (options.output.indexOf("html") > -1) {
-    fs.writeFileSync('output/map.html', d3n.html());
-} else if (options.output.indexOf("container") > -1) {
-    fs.writeFileSync('output/map_container.html', d3n.chartHTML());
+if (options.format.indexOf("svg") > -1) {
+    fs.writeFileSync('output/' + options.output + '.svg', d3n.svgString());
+} else if (options.format.indexOf("html") > -1) {
+    fs.writeFileSync('output/' + options.output + '.html', d3n.html());
+} else if (options.format.indexOf("container") > -1) {
+    fs.writeFileSync('output/' + options.output + '.html', d3n.chartHTML());
 } else {
-    fs.writeFileSync('output/map_container.html', d3n.chartHTML());
+    fs.writeFileSync('output/' + options.output + '.html', d3n.chartHTML());
 }
-

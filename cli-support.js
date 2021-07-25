@@ -6,6 +6,13 @@ const cliUsage = require('command-line-usage');
  */
 
 const cliOptions = [
+    {   name: 'output',
+        alias: 'o',
+        type: String,
+        typeLabel: '{underline string}',
+        description: 'The name of the output file. {bold Default is map.html}',
+        defaultValue: "map"
+    },
     {
         name: 'packed',
         alias: 'p',
@@ -20,17 +27,17 @@ const cliOptions = [
         type: String,
         multiple: true,
         typeLabel: '{underline string}',
-        description: 'Layers to include in the map. Note: keys are given in Danish. Options: danmark, regioner, kommuner {bold and/or} sogne. {bold [default danmark]}.\n{bold Note: Adding to many layers will result in a large generated SVG.}',
+        description: 'Layers to include in the map. Note: keys are given in Danish. Options: danmark, regioner, kommuner {bold and/or} sogne. {bold [default danmark]}.\n{bold Note: Adding to many layers will result in a large SVG.}',
         defaultValue: "danmark"
     },
     {
-        name: 'output',
-        alias: 'o',
+        name: 'format',
+        alias: 'f',
         type: String,
         multiple: true,
         typeLabel: '{underline string}',
-        description: 'Generated output file format. Options: svg, html {bold or} container. {bold [default container]}',
-        defaultValue: "container"
+        description: 'Generated output format. Options: svg, html {bold and/or} container. {bold [default html]}',
+        defaultValue: "html"
     },
     {
         name: 'quality',
@@ -65,7 +72,7 @@ let sections = [{
 
 let options;
 let validLayers = ['danmark', 'regioner', 'kommuner', 'sogne']
-let validOutput = ['svg', 'html', 'container']
+let validFormat = ['svg', 'html', 'container']
 
 try {
     options = cliArgs(cliOptions);
@@ -77,10 +84,10 @@ try {
             throw new Error('There is an error in the "layers" key provided. Multiple layers should be seperated with spaces and not a comman(,)')
         }
 
-        let outputComma = options.output.some(r=> r.indexOf(",") != -1)
+        let formatComma = options.format.some(r=> r.indexOf(",") != -1)
         
-        if(outputComma){
-            throw new Error('There is an error in the "output" key provided. Multiple outputs should be seperated with spaces and not a comman(,)')
+        if(formatComma){
+            throw new Error('There is an error in the "format" key provided. Multiple formats should be seperated with spaces and not a comman(,)')
         }
 
         let validateLayers = options.layers.some(r=> validLayers.indexOf(r) != -1)
@@ -89,10 +96,10 @@ try {
             throw new Error('There is an error in the "layers" key provided. Valid options are: danmark, regioner, kommuner, sogne. Default is: danmark')
         }
 
-        let validateOutput = options.output.some(r=> validOutput.indexOf(r) != -1)
+        let validateFormat = options.format.some(r=> validFormat.indexOf(r) != -1)
 
-        if(!validateOutput){
-            throw new Error('There is an error in the "output" key provided. Valid options are: svg, html and/or container. Default is: container')
+        if(!validateFormat){
+            throw new Error('There is an error in the "format" key provided. Valid options are: svg, html and/or container. Default is: html')
         }
     }
 

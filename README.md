@@ -21,64 +21,51 @@ see `node map-generator.js --help`
 ### Examples
 
 #### Generate svg file with a compact map of Denmark
-`node map-generator.js --packed --quality high --output svg --layers denmark`
+`node map-generator.js --packed --quality high --output svg --layers danmark`
 
 #### Generate a low resolution regional map svg in a html container 
-`node map-generator.js --quality low --output container --layers regions`
+`node map-generator.js --quality low --output container --layers regioner`
 
 ### Embed map and add style and interactivity
 1. Generate map `node map-generator.js --layers municipalities --output container -p`
 2. Embed in a html page
 3. Style with css styling
 ```
-        /* Set width of parent container for responsive SVG */
-        #datakollektivet-i0001 {
-            width: 800px;
-        }
+    /* Set width of parent container for responsive SVG */
+    #datakollektivet-i0001 {
+        width: 800px;
+    }
 
-
-        /* Style elements */
-        #datakollektivet-i0001 svg .region {
-            fill: transparent;
-            stroke: darkslategray;
-            stroke-width: 1px;
-        }
-
-        #datakollektivet-i0001 svg .region.over {
-            fill: darkslategray;
-            
-        }
+    /* Set fill and strok color */
+    #datakollektivet-i0001 svg {
+        fill:transparent;
+        stroke: black;
+        stroke-width: 0.2;
+    }
+        
+        
 ```
-4. Add interactivity with D3 
+4. Add interactivity with CSS
 ```
-    d3.select("svg").selectAll("g")
-        .on('mouseover', function () {
-            d3.select(this).attr("class", "region over")
-        })
-        .on('mouseout', function () {
-            d3.select(this).attr("class", "region")
-        });
-
+    /* Set color on hover */
+    #datakollektivet-i0001 svg g.kommune:hover {
+        fill:yellow;
+    }
 ```
 
 See [client-example.html](client-example.html) for complete code.
 
-### Features (will soon include)
+### Features
 
 #### Defining map layers
-It is possible to generate a map with a single layer and/or multiple layers. Options include:
+It is possible to generate a map with a single layer and/or multiple layers. Note: the options are provided in Danish to maintain consistency with the map data on [Dataforsyningen.dk](https://dataforsyningen.dk/). Options include:
 
-+ Denmark outline [Default]
-+ Regions
-+ Municipalities
-+ Postalcodes
-+ Parishes
-+ Precincts (police)
-+ Constituencies (election) 
-+ Jurisdictions (legal)
++ Danmark outline [Default]
++ Regioner
++ Kommuner
++ Sogne
 
-You define the layers by adding a cli argument, e.g. `node map-generator.js --layers denmark`. You can add multiple with comma seperation `--layers denmark, regions`.
-
+You define the layers by adding a cli argument, e.g. `node map-generator.js --layers danmark`. You can add multiple with comma seperation `--layers danmark regioner`.
 
 #### Define output format
 It is possible to generate multiple file outputs. Options include:
@@ -87,7 +74,9 @@ It is possible to generate multiple file outputs. Options include:
 + SVG file (i.e. `<svg>...</svg>`)
 + Full HTML file (i.e. `<html><body><div id="<id>"><svg>...</svg></div></body></html>`)
 
-You define the output format by adding a cli argument, e.g. `node map-generator.js --output container`. You can add multiple with `--output all` or with comma seperation `--output container, html`.
+You define the output format by adding a cli argument, e.g. `node map-generator.js --output container`. You can add multiple with `--output all` or with comma seperation `--output container html`.
+
+Output files will be save to the output folder.
 
 #### Configure style (or complexity)
 It is possible to generate maps that directly reflect the underlyig geojson, but also generate maps that have simpler geometries to make more stylistic and visually simpler maps. Options include:
@@ -100,9 +89,9 @@ It is possible to generate maps that directly reflect the underlyig geojson, but
 
 ### TODO
 
-2. Add features to groups (region, municipalities) to make interaction and styling easier
-5. Add custom container ID (e.g. to fit Datakollektivet production serial)
-6. The constituents map contain several layers (regional, large area and individual constituents). They should be extracted (merged) and offered as individual layers.
+1. Client-example: Add a meaningful data visualization using D3
+2. Add voting districts
+3. Add individual area layer options
 
 
 
