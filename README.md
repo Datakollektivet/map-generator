@@ -70,11 +70,12 @@ You define the layers by adding a cli argument, e.g. `node map-generator.js --la
 #### Define output format
 It is possible to generate multiple file outputs. Options include:
 
-+ HTML file with container (i.e. `<div id="<id>"><svg>...</svg></div>`) [Default]
+
 + SVG file (i.e. `<svg>...</svg>`)
 + Full HTML file (i.e. `<html><body><div id="<id>"><svg>...</svg></div></body></html>`)
++ HTML file with container (i.e. `<div id="<id>"><svg>...</svg></div>`) [Default]
 
-You define the output format by adding a cli argument, e.g. `node map-generator.js --output container`. You can add multiple with `--output all` or with comma seperation `--output container html`.
+You define the output format by adding a cli argument, e.g. `node map-generator.js --format container`. You can add multiple with `--format all` or with space seperation `--format container html`.
 
 Output files will be save to the output folder.
 
@@ -87,12 +88,28 @@ It is possible to generate maps that directly reflect the underlyig geojson, but
 + artsy (very low polygons)
 + pixel (pixelarated)
 
-### TODO
+#### Output file names
+With the `--output` option it is possible to add a distinct filename. This is useful if we need to generate mulitiple maps. 
 
+### Note on source data
+The map is generated from data from the Danish open data platform [Dataforsyningen.dk](https://dataforsyningen.dk/). Each element share common codes (with few variations) with the ids on e.g. the [Danish Statistical service](https://dst.dk). The mapes are generated the following way:
+
+1. The maps are fetched using the [DAGI_250 WFS]( https://api.dataforsyningen.dk/DAGI_250MULTIGEOM_GMLSFP_DAF?service=WFS&request=GetCapabilities&token=) service with a 1:250000 resolution.'Note you need an API key. This is free but requires an account.
+2. It is imported into QGIS using the [WFS 2.0 Client plugin](https://github.com/qgisinspiretools/qgis-wfs20-client-plugin).
+3. The maps are then exported as shapefiles from QGIS. For the region data, Bornholm has been seperated from its parent region (Hovedstaden) using QGIS. For the parish data, they include regional and municpal ids using QGIS intersect tool. 
+4. (Because we were unable to export working GeoJSON files using QGIS we) Generate GeoJSON files using [ogr2ogr](https://gdal.org/programs/ogr2ogr.html): `ogr2ogr -f GeoJSON -t_srs crs:84  ../geojson/sogne.geojson sogne.shp`
+5. (Because we need the topojson version to do some dynamic filtering we) Generate TopoJSON files using [topojson](https://github.com/topojson/topojson): `geo2topo -o ../topojson/sogne.topojson ../geojson/sogne.geojson` 
+
+#### History
+1. The initial version was based on [Neografen's Geo- and Topo JSON files available on github](https://github.com/Neogeografen/dagi).
+2. The second version was based on [Neografen's Geo- and Topo JSON files available on github](https://github.com/Neogeografen/dagi) and administrative data from [Danmarks Adressers Web API](https://dawadocs.dataforsyningen.dk/)
+3. The current version is based on map data from [Dataforsyningen.dk](https://dataforsyningen.dk/).
+
+
+### TODO
 1. Client-example: Add a meaningful data visualization using D3
 2. Add voting districts
 3. Add individual area layer options
-
 
 
 

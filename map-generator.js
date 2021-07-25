@@ -231,7 +231,11 @@ if (options.format.indexOf("svg") > -1) {
 } else if (options.format.indexOf("html") > -1) {
     fs.writeFileSync('output/' + options.output + '.html', d3n.html());
 } else if (options.format.indexOf("container") > -1) {
-    fs.writeFileSync('output/' + options.output + '.html', d3n.chartHTML());
+    fs.writeFileSync('output/' + options.output + '.container.html', d3n.chartHTML());
+} else if (options.format.indexOf("all") > -1) {
+    fs.writeFileSync('output/' + options.output + '.svg', d3n.svgString());
+    fs.writeFileSync('output/' + options.output + '.html', d3n.html());
+    fs.writeFileSync('output/' + options.output + '.container.html', d3n.chartHTML());
 } else {
-    fs.writeFileSync('output/' + options.output + '.html', d3n.chartHTML());
+    fs.writeFileSync('output/' + options.output + '.html', d3n.html());
 }

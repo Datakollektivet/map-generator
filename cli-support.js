@@ -72,7 +72,7 @@ let sections = [{
 
 let options;
 let validLayers = ['danmark', 'regioner', 'kommuner', 'sogne']
-let validFormat = ['svg', 'html', 'container']
+let validFormat = ['svg', 'html', 'container', 'all']
 
 try {
     options = cliArgs(cliOptions);
