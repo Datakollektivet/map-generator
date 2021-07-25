@@ -21,7 +21,6 @@ const { exit } = require("process");
 const { time } = require("console");
 const { createBrotliDecompress } = require("zlib");
 
-//TODO: Options.packed not working
 //TODO: Individual areas
 //TODO: Voting districts as a layer option
 
@@ -70,9 +69,6 @@ let projection = d3.geoMercator()
 
 let path = d3.geoPath()
     .projection(projection);
-
-//Loading administrative geographical relations 
-const administrativeRelations = JSON.parse(fs.readFileSync("./administrative-data/administrative-region-relations.json"));
 
 //We always load Denmark, because we need the bounds (although this could be done for every layer).
 const regionsTopo = JSON.parse(fs.readFileSync("./data/topojson/regioner.topojson"));
@@ -156,7 +152,7 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
             .data(municipalities.features)
             .enter()
             .each(function (d) {
-                
+
                 let kid = d.properties.kommunekod
                 let rid = d.properties.regionskod
 
@@ -171,7 +167,7 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
                         .attr("data-name", d.properties.navn);
                 }
 
-                g.append("path").attr("d", path(d.geometry))  
+                g.append("path").attr("d", path(d.geometry))
             })
     }
 
@@ -191,7 +187,7 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
                 let rid = d.properties.regionskod
                 let kid = d.properties.kommunekod
                 let sid = d.properties.sognekode
-                
+
                 let map_group = (kid === 400 || kid === 411) ? dk_bornholm : dk_main
                 let g = map_group.select("g.rid" + rid).empty() ? map_group : map_group.select("g.rid" + rid)
                 g = map_group.select("g.kid" + kid).empty() ? g : map_group.select("g.kid" + kid)
@@ -205,6 +201,27 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
                 g.append("path").attr("d", path(d.geometry))
             })
     }
+}
+
+//If we want a packed map - we move dk_bornholm and wrap it in a container
+if (options.packed) {
+    let bornholmBounds = path.bounds(bornholm);
+
+    let boundWidth = bornholmBounds[1][0] - bornholmBounds[0][0] + 20;
+    let boundHeight = bornholmBounds[1][1] - bornholmBounds[0][1] + 20;
+
+    dk_bornholm
+        .append("rect")
+        .attr("stroke", "#bbbbbb")
+        .attr("stroke-width", 0.5)
+        .attr("fill", "transparent")
+        .attr("width", boundWidth)
+        .attr("height", boundHeight)
+        .attr("x", bornholmBounds[0][0] - 10)
+        .attr("y", bornholmBounds[0][1] - 10);
+
+    dk_bornholm.attr("transform", "translate(-250, -400)");
+    
 }
 
 if (options.output.indexOf("svg") > -1) {
