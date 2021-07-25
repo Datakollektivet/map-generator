@@ -20,8 +20,8 @@ const cliOptions = [
         type: String,
         multiple: true,
         typeLabel: '{underline string}',
-        description: 'Layers to include in the map. Options: denmark, regions, police, jurisdictions, constituencies (election area), municipalities, postal, {bold and/or} parishes. {bold [default denmark]}.\n{bold Note: Adding to many layers will result in a large generated SVG.}',
-        defaultValue: "denmark"
+        description: 'Layers to include in the map. Note: keys are given in Danish. Options: danmark, regioner, kommuner {bold and/or} sogne. {bold [default danmark]}.\n{bold Note: Adding to many layers will result in a large generated SVG.}',
+        defaultValue: "danmark"
     },
     {
         name: 'output',
@@ -54,7 +54,7 @@ const cliOptions = [
 
 let sections = [{
     header: 'Map Generator',
-    content: 'Generates responsive SVG maps using D3-node.js.'
+    content: 'Generates responsive SVG maps of Denmark using D3-node.js.'
 },
 {
     header: 'Main options',
@@ -64,19 +64,32 @@ let sections = [{
 ];
 
 let options;
-let validLayers = ['denmark', 'regions', 'police', 'jurisdictions', 'constituencies', 'municipalities', 'postal', 'parishes']
+let validLayers = ['danmark', 'regioner', 'kommuner', 'sogne']
 let validOutput = ['svg', 'html', 'container']
 
 try {
     options = cliArgs(cliOptions);
 
     if(!options.hasOwnProperty("help")){
-        let validateLayers = options.layers.some(r=> validLayers.indexOf(r) >= 0)
-        if(!validateLayers){
-            throw new Error('There is an error in the "layers" key provided. Valid options are: denmark, regions, police, jurisdictions, constituencies, municipalities, postal and/or parishes. Default is: denmark')
+        let layerComma = options.layers.some(r=> r.indexOf(",") != -1)
+        
+        if(layerComma){
+            throw new Error('There is an error in the "layers" key provided. Multiple layers should be seperated with spaces and not a comman(,)')
         }
 
-        let validateOutput = options.output.some(r=> validOutput.indexOf(r) >= 0)
+        let outputComma = options.output.some(r=> r.indexOf(",") != -1)
+        
+        if(outputComma){
+            throw new Error('There is an error in the "output" key provided. Multiple outputs should be seperated with spaces and not a comman(,)')
+        }
+
+        let validateLayers = options.layers.some(r=> validLayers.indexOf(r) != -1)
+        
+        if(!validateLayers){
+            throw new Error('There is an error in the "layers" key provided. Valid options are: danmark, regioner, kommuner, sogne. Default is: danmark')
+        }
+
+        let validateOutput = options.output.some(r=> validOutput.indexOf(r) != -1)
 
         if(!validateOutput){
             throw new Error('There is an error in the "output" key provided. Valid options are: svg, html and/or container. Default is: container')

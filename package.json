@@ -20,6 +20,8 @@
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "d3-node": "^2.0.1",
-    "topojson": "^3.0.2"
+    "topojson": "^3.0.2",
+    "topojson-server": "^3.0.1",
+    "topojson-simplify": "^3.0.3"
   }
 }
