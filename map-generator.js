@@ -21,6 +21,10 @@ const { exit } = require("process");
 const { time } = require("console");
 const { createBrotliDecompress } = require("zlib");
 
+//TODO: Options.packed not working
+//TODO: Individual areas
+//TODO: Voting districts as a layer option
+
 const quality = {
     high: {
         q: 20000,
@@ -53,7 +57,7 @@ let viewBoxHeight = 600;
 
 const d3options = {
     selector: '#datakollektivet-i0001', //Change this somewhere to allow us to have project based maps
-    container: '<div id="datakollektivet-i0001"><meta charset="utf-8" /><style>svg, g {fill:transparent; stroke-width:0.2; stroke:black;}</style></div>' //need to remove style after development
+    container: '<div id="datakollektivet-i0001"><meta charset="utf-8" /></div>' //need to remove style after development
 };
 
 const d3n = new D3Node(d3options); // initializes D3 with container element
