@@ -94,8 +94,8 @@ let svg = d3n.createSVG(0, 0);
 svg.attr("viewBox", "0 0 " + viewBoxWidth + " " + viewBoxHeight);
 
 //Setting up two regions for different georgraphies, because we need to be able to move the island of Bornholm for a more compact map.
-let dk_main = svg.append("g").attr("id", "dk_main").attr("class", "denmark")
-let dk_bornholm = svg.append("g").attr("id", "dk_bornholm").attr("class", "denmark")
+let dk_main = svg.append("g").attr("id", "dk_main").attr("class", "danmark")
+let dk_bornholm = svg.append("g").attr("id", "dk_bornholm").attr("class", "danmark")
 
 //we want to sort layers so that we can add each to the previous layer
 options.layers.sort(function (a, b) {
