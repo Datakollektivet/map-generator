@@ -133,9 +133,9 @@ for (var i = 0, n = options.layers.length; i < n; i++) {
             .enter()
             .each(function (d) {
                 let g = d.properties.navn === "Bornholm" ? dk_bornholm : dk_main
-
+                let name = d.properties.navn === "Bornholm" ? "Region Hovedstaden" : d.properties.navn
                 g.append("g")
-                    .attr("data-name", d.properties.navn)
+                    .attr("data-name", name)
                     .attr("class", "region rid" + d.properties.regionskod)
                     .append("path")
                     .attr("d", path(d.geometry))
