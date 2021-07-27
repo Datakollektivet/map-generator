@@ -273,7 +273,7 @@ if (options.packed) {
         .append("rect")
         .attr("stroke", "#bbbbbb")
         .attr("stroke-width", 0.5)
-        .attr("fill", "transparent")
+        .attr("fill", "none")
         .attr("width", boundWidth)
         .attr("height", boundHeight)
         .attr("x", bornholmBounds[0][0] - 10)
